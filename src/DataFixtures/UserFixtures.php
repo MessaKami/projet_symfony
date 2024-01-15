@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
             $user->setEmail($faker->email);
             $user->setLastname($faker->lastName);
             $user->setFirstname($faker->firstName);
-            $user->setTel(str_replace(' ', '',$faker->mobileNumber));
+            $user->setTel(str_replace(' ', '', $faker->mobileNumber));
             $user->setAddress($faker->streetAddress);
             $user->setZipcode($faker->postcode);
             $user->setCity($faker->city);
