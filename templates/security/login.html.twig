@@ -1,7 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Log in!
-{% endblock %}
+		{% endblock %}
+
+	
+		
+	
 
 {% block body %}
 	<section class="container my-3">
@@ -37,5 +41,44 @@
 			</div>
 		</div>
 	</section>
+
+	
+		{# <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
+	<script>
+ 
+$(document).ready(function(){
+ 
+    $("#submit").click(function(e){
+        e.preventDefault();
+ 
+            $.ajax({
+            url:"Security/UserAuthenticator.php",
+            type:'POST',
+			dataType: 'json', //text
+            data: {
+                username : $("#username").val(),  // Nous récupérons la valeur de nos input que l'on fait passer à connexion.php
+                password : $("#password").val()
+                
+            },
+            success:function(response){		
+			 //var json = $.parseJSON(response);
+				console.log(response);
+				alert(response.nom + response.prenom);
+
+
+            },
+			error:function(response){
+                console.log('error');
+				alert("error");
+
+            }
+			
+        });
+    });
+});
+ 
+</script> #}
 
 {% endblock %}
