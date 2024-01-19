@@ -28,7 +28,17 @@
             <tr>
                 <td>{{ user.id }}</td>
                 <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{#{{ user.roles ? user.roles|json_encode : '' }}#}
+                    {% for role in user.roles %}
+                        {% if role == "ROLE_ADMIN" %}
+                            {% set name = "Administrateur" %}
+                            {% set color = "danger" %}
+                        {% else %}
+                            {% set name = "Membre" %}
+                             {% set color = "success" %}
+                        {% endif %}
+                          <span class="badge bg-{{ color }}">{{ name }}</span>
+                    {% endfor %} </td>
                 {# <td>{{ user.password }}</td> #}
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.firstname }}</td>

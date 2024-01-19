@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DisplayUserController!{% endblock %}
+
+{% block body %}
+<main class="container mt-4">
+		<h1 class="ms-15">Liste des utilisateurs</h1>
+
+		<table class="table table-hover">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">Nom</th>
+					<th scope="col">Prénom</th>
+					<th scope="col">Email</th>
+					<th scope="col">Téléphone</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in user %}
+					<tr>
+						<th scope="row">{{user.id}}</th>
+						<td>{{user.lastname}}</td>
+						<td>{{user.firstname}}</td>
+						<td>{{user.email}}</td>
+						<td>{{user.Tel}}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</main>
+{% endblock %}
