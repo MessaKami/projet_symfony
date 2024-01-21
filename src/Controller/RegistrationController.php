@@ -10,11 +10,13 @@ use App\Service\JWTService;
 use App\Service\SendMailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
@@ -142,5 +144,19 @@ class RegistrationController extends AbstractController
         );
         $this->addFlash('success', 'Email de vérification envoyé');
         return $this->redirectToRoute('profile_index');
+    }
+
+    #[Route('/autocomplete', name: 'address_autocomplete')]
+    public function autocomplete(Request $request, HttpClientInterface $httpClient): JsonResponse
+    {
+        $query = $request->query->get('query');
+
+        $response = $httpClient->request(
+            'GET',
+            'https://api-adresse.data.gouv.fr/search/',
+            ['query' => ['q' => $query, 'limit' => 5]]
+        );
+
+        return new JsonResponse($response->toArray(false));
     }
 }

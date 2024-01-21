@@ -19,6 +19,7 @@
                     label: 'Mot de Passe'
                 }) }}
 				{{ form_row(registrationForm.address) }}
+				<div id="addressSuggestions" class="address-suggestions"></div>
 				{{ form_row(registrationForm.zipcode) }}
 				{{ form_row(registrationForm.city) }}
 				{{ form_row(registrationForm.RGPDConsent, {
@@ -32,6 +33,44 @@
 		</div>
 	</section>
 	
+	
 
+{% endblock %}
+
+{% block javascripts %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var addressInput = document.getElementById('registrationForm_address');
+    if (addressInput) {
+        addressInput.addEventListener('input', function() {
+            var input = this.value;
+            if (input.length > 2) {
+                fetch('/autocomplete?query=' + encodeURIComponent(input))
+                    .then(response => response.json())
+                    .then(data => {
+                        const suggestionsContainer = document.getElementById('addressSuggestions');
+                        suggestionsContainer.innerHTML = ''; // Effacer les anciennes suggestions
+
+                        data.features.forEach(feature => {
+                            const suggestionElement = document.createElement('div');
+                            suggestionElement.innerText = feature.properties.label;
+                            suggestionElement.onclick = function() {
+                                document.getElementById('registrationForm_address').value = feature.properties.label;
+                                document.getElementById('registrationForm_zipcode').value = feature.properties.postcode;
+                                document.getElementById('registrationForm_city').value = feature.properties.city;
+                                suggestionsContainer.innerHTML = ''; // Effacer les suggestions après sélection
+                            };
+                            suggestionsContainer.appendChild(suggestionElement);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors de la récupération des données :', error);
+                    });
+            }
+        });
+    }
+});
+</script>
 
 {% endblock %}
