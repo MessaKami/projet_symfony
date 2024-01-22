@@ -1,109 +1,110 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
+{% block title %}User index
+{% endblock %}
 
 {% block body %}
-    {# <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
-    <h1>User index</h1>
+	{# <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
+	<h1>User index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                {# <th>Password</th> #}
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Tel</th>
-                <th>Address</th>
-                <th>Zipcode</th>
-                <th>City</th>
-                <th>Is_verified</th>
-                {# <th>ResetToken</th> #}
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{#{{ user.roles ? user.roles|json_encode : '' }}#}
-                    {% for role in user.roles %}
-                        {% if role == "ROLE_ADMIN" %}
-                            {% set name = "Administrateur" %}
-                            {% set color = "danger" %}
-                        {% else %}
-                            {% set name = "Membre" %}
-                             {% set color = "success" %}
-                        {% endif %}
-                          <span class="badge bg-{{ color }}">{{ name }}</span>
-                    {% endfor %} </td>
-                {# <td>{{ user.password }}</td> #}
-                <td>{{ user.lastname }}</td>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.Tel }}</td>
-                <td>{{ user.address }}</td>
-                <td>{{ user.zipcode }}</td>
-                <td>{{ user.city }}</td>
-                <td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
-                {# <td>{{ user.resetToken }}</td> #}
-                <td>
-                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
-                    <button class="deleteBtn" id="{{ user.id }}">Remove</button>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="13">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Id</th>
+				<th>Email</th>
+				<th>Roles</th>
+				{# <th>Password</th> #}
+				<th>Lastname</th>
+				<th>Firstname</th>
+				<th>Tel</th>
+				<th>Address</th>
+				<th>Zipcode</th>
+				<th>City</th>
+				<th>Is_verified</th>
+				{# <th>ResetToken</th> #}
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+				<tr>
+					<td>{{ user.id }}</td>
+					<td>{{ user.email }}</td>
+					<td>
+						{#{{ user.roles ? user.roles|json_encode : '' }}#}
+						{% for role in user.roles %}
+							{% if role == "ROLE_ADMIN" %}
+								{% set name = "Administrateur" %}
+								{% set color = "danger" %}
+							{% else %}
+								{% set name = "Membre" %}
+								{% set color = "success" %}
+							{% endif %}
+							<span class="badge bg-{{ color }}">{{ name }}</span>
+						{% endfor %}
+					</td>
+					{# <td>{{ user.password }}</td> #}
+					<td>{{ user.lastname }}</td>
+					<td>{{ user.firstname }}</td>
+					<td>{{ user.Tel }}</td>
+					<td>{{ user.address }}</td>
+					<td>{{ user.zipcode }}</td>
+					<td>{{ user.city }}</td>
+					<td>{{ user.isVerified ? 'Yes' : 'No' }}</td>
+					{# <td>{{ user.resetToken }}</td> #}
+					<td>
+						<a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+						<a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+						<button class="deleteBtn" id="delete-{{ user.id }}" data-csrf-token="{{ csrf_token('delete' ~ user.id) }}">
+							Remove
+						</button>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="13">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
-    {# <a href="{{ path('app_user_new') }}">Create new</a> #}
+	{# <a href="{{ path('app_user_new') }}">Create new</a> #}
 
-  
 
 {% endblock %}
 
 {% block javascripts %}
 
-<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
- {% for user in users %}
-alert(user.id)
-$('.deleteBtn').click(function (e) {
-    e.preventDefault();
-
-     $.ajax({
-            // Action
-            url: '/admin/' + user.id,
-            // Method
-            type: 'POST',
-            data: {
-              // Get value
-              id: 7,
-              action: "delete"
-            },
-            success:function(response){
-              // Response is the output of action file
-              if(response == 1){
-                alert("Data Deleted Successfully");
-                document.getElementById(user.id).style.display = "none";
-              }
-              else if(response == 0){
-                alert("Data Cannot Be Deleted");
-              }
-            }
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script>
+$(document).ready(function() {
+    $('.deleteBtn').click(function(e) {
+        e.preventDefault();
+        var userId = this.id.replace('delete-', '');
+        var csrfToken = $(this).data('csrf-token');
+        
+        if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+            $.ajax({
+                url: '/admin/' + userId,
+                type: 'POST',
+                data: {
+                    '_token': csrfToken,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        alert("Utilisateur supprimé avec succès");
+                        $('#delete-' + userId).closest('tr').remove();
+                    } else {
+                        alert("La suppression a échoué");
+                    }
+                },
+                error: function() {
+                    alert("Une erreur s'est produite");
+                }
+            });
+        }
     });
-
 });
-{% endfor %}
-    </script>
+	</script>
 
 {% endblock %}
-
-
