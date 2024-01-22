@@ -41,10 +41,11 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    var addressInput = document.getElementById('registrationForm_address');
+    var addressInput = document.getElementById('registration_form_address');
     if (addressInput) {
         addressInput.addEventListener('input', function() {
             var input = this.value;
+           console.log(addressInput);
             if (input.length > 2) {
                 fetch('/autocomplete?query=' + encodeURIComponent(input))
                     .then(response => response.json())
@@ -56,9 +57,9 @@ document.addEventListener('DOMContentLoaded', function() {
                             const suggestionElement = document.createElement('div');
                             suggestionElement.innerText = feature.properties.label;
                             suggestionElement.onclick = function() {
-                                document.getElementById('registrationForm_address').value = feature.properties.label;
-                                document.getElementById('registrationForm_zipcode').value = feature.properties.postcode;
-                                document.getElementById('registrationForm_city').value = feature.properties.city;
+                                document.getElementById('registration_form_address').value = feature.properties.label;
+                                document.getElementById('registration_form_zipcode').value = feature.properties.postcode;
+                                document.getElementById('registration_form_city').value = feature.properties.city;
                                 suggestionsContainer.innerHTML = ''; // Effacer les suggestions après sélection
                             };
                             suggestionsContainer.appendChild(suggestionElement);

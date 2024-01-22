@@ -13,7 +13,7 @@ class DisplayUserController extends AbstractController
     public function index(UserRepository $userRepository): Response
     {
         return $this->render('display_user/index.html.twig', [
-                'user' => $userRepository->findAll()
+            'user' => $userRepository->findAll()
         ]);
     }
 }

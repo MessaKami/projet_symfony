@@ -3,6 +3,7 @@
 {% block title %}User index{% endblock %}
 
 {% block body %}
+    {# <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> #}
     <h1>User index</h1>
 
     <table class="table">
@@ -51,6 +52,7 @@
                 <td>
                     <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
                     <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                    <button class="deleteBtn" id="{{ user.id }}">Remove</button>
                 </td>
             </tr>
         {% else %}
@@ -62,4 +64,46 @@
     </table>
 
     {# <a href="{{ path('app_user_new') }}">Create new</a> #}
+
+  
+
 {% endblock %}
+
+{% block javascripts %}
+
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+ {% for user in users %}
+alert(user.id)
+$('.deleteBtn').click(function (e) {
+    e.preventDefault();
+
+     $.ajax({
+            // Action
+            url: '/admin/' + user.id,
+            // Method
+            type: 'POST',
+            data: {
+              // Get value
+              id: 7,
+              action: "delete"
+            },
+            success:function(response){
+              // Response is the output of action file
+              if(response == 1){
+                alert("Data Deleted Successfully");
+                document.getElementById(user.id).style.display = "none";
+              }
+              else if(response == 0){
+                alert("Data Cannot Be Deleted");
+              }
+            }
+    });
+
+});
+{% endfor %}
+    </script>
+
+{% endblock %}
+
+
