@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string The hashed password
-     */
+     */ 
     #[ORM\Column]
     private ?string $password = null;
 
@@ -259,6 +259,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-   
 }

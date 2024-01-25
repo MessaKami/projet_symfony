@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const suggestionElement = document.createElement('div');
                             suggestionElement.innerText = feature.properties.label;
                             suggestionElement.onclick = function() {
-                                document.getElementById('registration_form_address').value = feature.properties.label;
+                                document.getElementById('registration_form_address').value = feature.properties.name;
                                 document.getElementById('registration_form_zipcode').value = feature.properties.postcode;
                                 document.getElementById('registration_form_city').value = feature.properties.city;
                                 suggestionsContainer.innerHTML = ''; // Effacer les suggestions après sélection
